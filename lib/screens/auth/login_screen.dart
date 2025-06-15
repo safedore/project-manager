@@ -20,22 +20,32 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isEmailFilled = false;
   bool _isPassFilled = false;
   bool _hidePass = true;
+  bool _isLoading = false;
 
   void _login() async {
-    if (_isEmailFilled || _isPassFilled) {
+    if (_isEmailFilled && _isPassFilled) {
+      setState(() {
+        _isLoading = true;
+      });
       final email = _emailController.text;
       final password = _passwordController.text;
       final error = await _authService.login(email, password);
 
       if (error == null) {
         if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const DashboardScreen()),
           );
         }
       } else {
-        setState(() => _error = 'Incorrect mail/password. Please try again');
+        setState(() {
+          _error = 'Incorrect mail/password. Please try again';
+          _isLoading = false;
+        });
       }
     }
   }
@@ -46,49 +56,67 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: [
-            if (_error != null)
-              Text(_error!, style: const TextStyle(color: Colors.red)),
-            Image.asset(
-              'assets/auth_mig.jpg',
-            ),
-            const SizedBox(height: 20),
-            _textFormField(_emailController, 'Email', false, TextInputType.emailAddress),
-            SizedBox(height: 8),
-            _textFormField(_passwordController, 'Password', _hidePass, TextInputType.visiblePassword),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _login,
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(
-                  _isEmailFilled && _isPassFilled ? Colors.blue : Colors.grey,
-                ),
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : ListView(
+                children: [
+
+                  Image.asset('assets/auth_mig.jpg'),
+                  const SizedBox(height: 20),
+                  _textFormField(
+                    _emailController,
+                    'Email',
+                    false,
+                    TextInputType.emailAddress,
+                  ),
+                  SizedBox(height: 8),
+                  _textFormField(
+                    _passwordController,
+                    'Password',
+                    _hidePass,
+                    TextInputType.visiblePassword,
+                  ),
+                  if (_error != null)
+                    Text(_error!, style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _login,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        _isEmailFilled && _isPassFilled
+                            ? Colors.blue
+                            : Colors.grey,
+                      ),
+                    ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ForgotPasswordScreen(),
+                      ),
+                    ),
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignupScreen()),
+                    ),
+                    child: const Text(
+                      'Don’t have an account? Sign Up',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
               ),
-              child: const Text('Login', style: TextStyle(color: Colors.white)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
-              ),
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const SignupScreen()),
-              ),
-              child: const Text(
-                'Don’t have an account? Sign Up',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -120,7 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: obscureText,
       onChanged: (value) {
         setState(() {
-          if (TextFieldValidation.emailValidate(_emailController.text) && _passwordController.text.isNotEmpty) {
+          if (TextFieldValidation.emailValidate(_emailController.text) &&
+              _passwordController.text.isNotEmpty) {
             _isEmailFilled = true;
             _isPassFilled = true;
           } else {

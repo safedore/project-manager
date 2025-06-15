@@ -18,19 +18,29 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isEmailFilled = false;
   bool _isPassFilled = false;
   bool _hidePass = true;
+  bool _isLoading = false;
 
   void _signup() async {
-    if (_isEmailFilled || _isPassFilled) {
+    if (_isEmailFilled && _isPassFilled) {
+      setState(() {
+        _isLoading = true;
+      });
       final email = _emailController.text;
       final password = _passwordController.text;
       final error = await _authService.signUp(email, password);
 
       if (error == null) {
         if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
           Navigator.pop(context);
         }
       } else {
-        setState(() => _error = error);
+        setState(() {
+          _error = error;
+          _isLoading = false;
+        });
       }
     }
   }
@@ -41,52 +51,54 @@ class _SignupScreenState extends State<SignupScreen> {
       appBar: AppBar(title: const Text('Sign Up')),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: [
-            Image.asset(
-              'assets/auth_img.jpg',
-            ),
-            const SizedBox(height: 20),
-            _textFormField(
-              _emailController,
-              'Email',
-              false,
-              'johndoe@anon.com',
-              TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 10),
-            _textFormField(
-              _passwordController,
-              'Password',
-              _hidePass,
-              'Minimum 8 characters',
-              TextInputType.visiblePassword,
-            ),
-            const SizedBox(height: 10),
-            _textFormField(
-              _cPasswordController,
-              'Confirm Password',
-              _hidePass,
-              'Same as Password',
-              TextInputType.visiblePassword,
-            ),
-            const SizedBox(height: 20),
-            if (_error != null)
-              Text(_error!, style: const TextStyle(color: Colors.red)),
-            ElevatedButton(
-              onPressed: _signup,
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(
-                  _isEmailFilled && _isPassFilled ? Colors.blue : Colors.grey,
-                ),
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : ListView(
+                children: [
+                  Image.asset('assets/auth_img.jpg'),
+                  const SizedBox(height: 20),
+                  _textFormField(
+                    _emailController,
+                    'Email',
+                    false,
+                    'johndoe@anon.com',
+                    TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 10),
+                  _textFormField(
+                    _passwordController,
+                    'Password',
+                    _hidePass,
+                    'Minimum 8 characters',
+                    TextInputType.visiblePassword,
+                  ),
+                  const SizedBox(height: 10),
+                  _textFormField(
+                    _cPasswordController,
+                    'Confirm Password',
+                    _hidePass,
+                    'Same as Password',
+                    TextInputType.visiblePassword,
+                  ),
+                  const SizedBox(height: 20),
+                  if (_error != null)
+                    Text(_error!, style: const TextStyle(color: Colors.red)),
+                  ElevatedButton(
+                    onPressed: _signup,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        _isEmailFilled && _isPassFilled
+                            ? Colors.blue
+                            : Colors.grey,
+                      ),
+                    ),
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
-              child: const Text(
-                'Sign Up',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
