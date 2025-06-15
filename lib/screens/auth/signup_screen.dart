@@ -43,15 +43,8 @@ class _SignupScreenState extends State<SignupScreen> {
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
-            if (_error != null)
-              Text(_error!, style: const TextStyle(color: Colors.red)),
-            Image.network(
-              'https://placehold.co/200x200.png',
-              errorBuilder: (context, error, stackTrace) => SizedBox(
-                height: 200,
-                width: 200,
-                child: Text('Could not load image'),
-              ),
+            Image.asset(
+              'assets/auth_img.jpg',
             ),
             const SizedBox(height: 20),
             _textFormField(
@@ -78,6 +71,8 @@ class _SignupScreenState extends State<SignupScreen> {
               TextInputType.visiblePassword,
             ),
             const SizedBox(height: 20),
+            if (_error != null)
+              Text(_error!, style: const TextStyle(color: Colors.red)),
             ElevatedButton(
               onPressed: _signup,
               style: ButtonStyle(
@@ -129,40 +124,18 @@ class _SignupScreenState extends State<SignupScreen> {
       obscureText: obscureText,
       onChanged: (value) {
         setState(() {
-          if (value.isNotEmpty) {
-            if (label == 'Email') {
-              if (TextFieldValidation.emailValidate(value)) {
-                if (TextFieldValidation.confirmPasswordValidate(
-                  _passwordController.text,
-                  _cPasswordController.text,
-                )) {
-                  _isEmailFilled = true;
-                  _isPassFilled = true;
-                } else {
-                  _isPassFilled = false;
-                }
-              } else {
-                _isEmailFilled = false;
-              }
-            } else if (label == 'Password') {
-              if (TextFieldValidation.confirmPasswordValidate(
-                value,
-                _cPasswordController.text,
-              )) {
-                _isPassFilled = true;
-              } else {
-                _isPassFilled = false;
-              }
-            } else if (label == 'Confirm Password') {
-              if (TextFieldValidation.confirmPasswordValidate(
-                value,
-                _passwordController.text,
-              )) {
-                _isPassFilled = true;
-              } else {
-                _isPassFilled = false;
-              }
+          if (TextFieldValidation.emailValidate(_emailController.text)) {
+            if (TextFieldValidation.confirmPasswordValidate(
+              _passwordController.text,
+              _cPasswordController.text,
+            )) {
+              _isEmailFilled = true;
+              _isPassFilled = true;
+            } else {
+              _isPassFilled = false;
             }
+          } else {
+            _isEmailFilled = false;
           }
         });
       },

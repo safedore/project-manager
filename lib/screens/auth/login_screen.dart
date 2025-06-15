@@ -50,9 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             if (_error != null)
               Text(_error!, style: const TextStyle(color: Colors.red)),
-            Image.network(
-              'https://placehold.co/200x200.png',
-              errorBuilder: (context, error, stackTrace) => SizedBox(height: 200, width: 200, child: Text('Could not load image'),),
+            Image.asset(
+              'assets/auth_mig.jpg',
             ),
             const SizedBox(height: 20),
             _textFormField(_emailController, 'Email', false, TextInputType.emailAddress),
@@ -121,16 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: obscureText,
       onChanged: (value) {
         setState(() {
-          if (value.isNotEmpty) {
-            if (label == 'Email') {
-              if (TextFieldValidation.emailValidate(value)) {
-                _isEmailFilled = true;
-              } else {
-                _isEmailFilled = false;
-              }
-            } else if (label == 'Password') {
-              _isPassFilled = true;
-            }
+          if (TextFieldValidation.emailValidate(_emailController.text) && _passwordController.text.isNotEmpty) {
+            _isEmailFilled = true;
+            _isPassFilled = true;
+          } else {
+            _isEmailFilled = false;
+            _isPassFilled = false;
           }
         });
       },

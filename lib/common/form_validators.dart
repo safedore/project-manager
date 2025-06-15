@@ -7,14 +7,14 @@ class TextFieldValidation {
   }
 
   static bool confirmPasswordValidate(String value, String password) {
-    if (value.isNotEmpty && value.length >= 8) {
+    if ((value.isNotEmpty && value.length >= 8) && (password.isNotEmpty && password.length >= 8)) {
       if (value == password) {
         return true;
       } else {
         return false;
       }
     } else {
-      return true;
+      return false;
     }
   }
 
