@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "242486997369",
+    "project_id": "project-manager-sky",
+    "storage_bucket": "project-manager-sky.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242486997369:android:8e0ffba757ac339321bfa8",
+        "android_client_info": {
+          "package_name": "com.safe.project_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8lUOzADisj6w3M9AOXMuNXgxDGseMBXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
