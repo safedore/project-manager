@@ -28,7 +28,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
   late Future<void> _initializeVideoPlayerFuture;
   Duration _currentPosition = Duration.zero;
   final _mediaService = MediaService();
-  String _mediaPath = '';
+  final String _mediaPath = '';
 
   @override
   void initState() {

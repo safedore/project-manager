@@ -115,7 +115,6 @@ class _MediaVideosScreenState extends State<MediaVideosScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              print('$url as da das sa as  sa');
               Navigator.pop(mContext);
               await _mediaService.deleteMedia(
                 url: url,
