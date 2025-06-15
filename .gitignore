@@ -36,7 +36,7 @@ migrate_working_dir/
 # Lib extras
 /lib/services/f_media_services.dart
 /lib/services/firestore_services.dart
-/lib/screens/projects/video_player_item2.dart
+/lib/screens/projects/widgets/video_player_item2.dart
 
 # Symbolication related
 app.*.symbols
